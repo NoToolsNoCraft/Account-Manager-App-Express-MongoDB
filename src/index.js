@@ -50,11 +50,14 @@ app.post("/signup", async (req, res) => {
     };
 
     try {
-        const checking = await LogInCollection.findOne({ name: req.body.name });
+        // Check if the username already exists in the database
+        const existingUser = await LogInCollection.findOne({ name: req.body.name });
 
-        if (checking && checking.password === req.body.password) {
-            res.send("User details already exist");
+        // If the username is already taken, send a message
+        if (existingUser) {
+            res.send("Username already exists. Please choose a different username.");
         } else {
+            // If the username is not taken, insert the new user into the database
             await LogInCollection.insertMany([data]);
             req.session.user = req.body.name; // Set user in session
             res.status(201).render("home", { naming: req.body.name });
@@ -64,6 +67,7 @@ app.post("/signup", async (req, res) => {
         res.status(500).send("Server error");
     }
 });
+
 
 // Login Route
 app.post("/login", async (req, res) => {
