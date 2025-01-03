@@ -18,5 +18,8 @@
     "mongoose": "^6.13.5",
     "nodemon": "^2.0.19",
     "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "cypress": "^13.17.0"
   }
 }
