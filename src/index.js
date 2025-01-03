@@ -145,6 +145,24 @@ app.post("/delete-account", async (req, res) => {
     }
 });
 
+// Logout Route
+app.post("/logout", (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).send("Error logging out.");
+        }
+        res.redirect("/"); // Redirect to login page after logout
+    });
+});
+
+app.get("/home", (req, res) => {
+    if (!req.session.user) {
+        return res.redirect("/"); // Redirect to login if not logged in
+    }
+
+    res.render("home", { naming: req.session.user });
+});
+
 // Start Server
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
