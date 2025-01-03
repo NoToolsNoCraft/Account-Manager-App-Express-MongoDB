@@ -139,7 +139,7 @@ app.post("/delete-account", async (req, res) => {
         if (deletedUser.deletedCount > 0) {
             req.session.destroy(); // Clear session after account deletion
             res.send(`<p>Your account has been successfully deleted.</p>
-                    <p><a href="/login">Go back to the login page</a></p>`);
+                    <p><a href="/">Go back to the login page</a></p>`);
         } else {
             res.status(404).send("Account not found.");
         }
