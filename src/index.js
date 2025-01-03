@@ -130,7 +130,7 @@ app.post("/change-password", async (req, res) => {
 app.post("/delete-account", async (req, res) => {
     if (!req.session.user) {
         return res.status(401).send(`<p>Unauthorized. Please log in.</p> 
-                                    <p><a href="/login">Go back to the login page</a></p>`);
+                                    <p><a href="/">Go back to the login page</a></p>`);
     }
 
     try {
