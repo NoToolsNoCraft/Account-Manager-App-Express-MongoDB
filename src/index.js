@@ -187,21 +187,28 @@ app.get("/api/users", async (req, res) => {
 });
 
 // Route to add a new user
-app.post("/api/users", async (req, res) => {
-    const data = {
-        name: req.body.name,
-        password: req.body.password,
-    };
-
+app.post("/api/items", async (req, res) => {
     try {
-        // Insert the new user into the database
-        await LogInCollection.insertMany([data]);
-        res.status(201).send("User created successfully");
+        const { name, password } = req.body;
+
+        // Check if the username already exists
+        const existingUser = await LogInCollection.findOne({ name });
+
+        if (existingUser) {
+            return res.status(409).json({ message: "Username already exists. Please choose a different one." });
+        }
+
+        // Create new item if username is unique
+        const newItem = new LogInCollection({ name, password });
+        await newItem.save();
+
+        res.status(201).json({ message: "Item created successfully", newItem });
     } catch (error) {
-        console.error("Error adding user:", error);
-        res.status(500).send("Server error");
+        console.error("Error creating item:", error);
+        res.status(500).json({ message: "Server error" });
     }
 });
+
 
 // Retrieve a Single User by Name
 app.get("/api/users/:name", async (req, res) => {
