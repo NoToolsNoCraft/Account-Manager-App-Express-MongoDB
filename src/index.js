@@ -172,3 +172,34 @@ app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
 
+
+//The following parts of the code are for Postman testing
+
+// Route to get all users from the login collection
+app.get("/api/users", async (req, res) => {
+    try {
+        const users = await LogInCollection.find({});
+        res.status(200).json(users);  // Return the users in JSON format
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        res.status(500).send("Error fetching users");
+    }
+});
+
+// Route to add a new user
+app.post("/api/users", async (req, res) => {
+    const data = {
+        name: req.body.name,
+        password: req.body.password,
+    };
+
+    try {
+        // Insert the new user into the database
+        await LogInCollection.insertMany([data]);
+        res.status(201).send("User created successfully");
+    } catch (error) {
+        console.error("Error adding user:", error);
+        res.status(500).send("Server error");
+    }
+});
+
