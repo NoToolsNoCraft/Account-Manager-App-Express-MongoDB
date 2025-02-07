@@ -222,6 +222,33 @@ app.get("/api/users/:name", async (req, res) => {
     }
 });
 
+// Update User Password by Name
+app.put("/api/users/:name/password", async (req, res) => {
+    const userName = req.params.name;
+    const { newPassword } = req.body;
+
+    if (!newPassword) {
+        return res.status(400).send("New password is required.");
+    }
+
+    try {
+        const result = await LogInCollection.updateOne(
+            { name: userName },
+            { $set: { password: newPassword } }
+        );
+
+        if (result.matchedCount === 0) {
+            return res.status(404).send("User not found.");
+        }
+
+        res.status(200).send("Password updated successfully.");
+    } catch (error) {
+        console.error("Error updating password:", error);
+        res.status(500).send("Server error");
+    }
+});
+
+
 // Delete a Single User by Name
 app.delete("/api/users/:name", async (req, res) => {
     const userName = req.params.name;
