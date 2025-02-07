@@ -203,3 +203,40 @@ app.post("/api/users", async (req, res) => {
     }
 });
 
+// Retrieve a Single User by Name
+app.get("/api/users/:name", async (req, res) => {
+    const userName = req.params.name;
+    
+    try {
+        // Find the user by name
+        const user = await LogInCollection.findOne({ name: userName });
+
+        if (!user) {
+            return res.status(404).send("User not found.");
+        }
+
+        res.status(200).json(user); // Send the user data back
+    } catch (error) {
+        console.error("Error fetching user:", error);
+        res.status(500).send("Server error");
+    }
+});
+
+// Delete a Single User by Name
+app.delete("/api/users/:name", async (req, res) => {
+    const userName = req.params.name;
+
+    try {
+        // Find the user by name and delete it
+        const result = await LogInCollection.deleteOne({ name: userName });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).send("User not found.");
+        }
+
+        res.status(200).send("User deleted successfully.");
+    } catch (error) {
+        console.error("Error deleting user:", error);
+        res.status(500).send("Server error");
+    }
+});
